@@ -153,20 +153,24 @@ func (e *Engine) Run() {
 
 // Handle keyboard input
 func (e *Engine) handleInput() {
-	speed := float32(0.1)
+	speed := float32(0.005)
 	if rl.IsKeyDown(rl.KeyLeftShift) {
 		speed *= 2
 	}
 
 	// Forward/Backward
 	if rl.IsKeyDown(rl.KeyW) {
-		e.Camera.Camera3D.Position = rl.Vector3Add(
-			e.Camera.Camera3D.Position,
+		e.Camera3D.Position = rl.Vector3Add(
+			e.Camera3D.Position,
 			rl.Vector3Scale(
 				rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
 				speed,
 			),
 		)
+		// This moves the camera forward by:
+		// 1. Calculating the direction vector (Target - Position)
+		// 2. Scaling this vector by the speed
+		// 3. Adding the scaled vector to the current position
 	}
 	if rl.IsKeyDown(rl.KeyS) {
 		e.Camera3D.Position = rl.Vector3Subtract(
@@ -176,12 +180,26 @@ func (e *Engine) handleInput() {
 				speed,
 			),
 		)
+		// This moves the camera backward by:
+		// 1. Calculating the direction vector (Target - Position)
+		// 2. Scaling this vector by the speed
+		// 3. Subtracting the scaled vector from the current position
 	}
 
 	// Left/Right
 	if rl.IsKeyDown(rl.KeyA) {
 		e.Camera3D.Position = rl.Vector3Subtract(
 			e.Camera3D.Position,
+			rl.Vector3Scale(
+				rl.Vector3CrossProduct(
+					rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
+					e.Camera3D.Up,
+				),
+				speed,
+			),
+		)
+		e.Camera3D.Target = rl.Vector3Subtract(
+			e.Camera3D.Target,
 			rl.Vector3Scale(
 				rl.Vector3CrossProduct(
 					rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
@@ -202,20 +220,28 @@ func (e *Engine) handleInput() {
 				speed,
 			),
 		)
+		e.Camera3D.Target = rl.Vector3Add(
+			e.Camera3D.Target,
+			rl.Vector3Scale(
+				rl.Vector3CrossProduct(
+					rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
+					e.Camera3D.Up,
+				),
+				speed,
+			),
+		)
 	}
 
 	// Up/Down
 	if rl.IsKeyDown(rl.KeySpace) {
-		e.Camera3D.Position = rl.Vector3Add(
-			e.Camera3D.Position,
-			rl.Vector3Scale(e.Camera3D.Up, speed),
-		)
+		upVector := rl.Vector3Scale(e.Camera3D.Up, speed*10)
+		e.Camera3D.Position = rl.Vector3Add(e.Camera3D.Position, upVector)
+		e.Camera3D.Target = rl.Vector3Add(e.Camera3D.Target, upVector)
 	}
-	if rl.IsKeyDown(rl.KeyLeftControl) {
-		e.Camera3D.Position = rl.Vector3Subtract(
-			e.Camera3D.Position,
-			rl.Vector3Scale(e.Camera3D.Up, speed),
-		)
+	if rl.IsKeyDown(rl.KeyLeftAlt) {
+		downVector := rl.Vector3Scale(e.Camera3D.Up, -speed*10)
+		e.Camera3D.Position = rl.Vector3Add(e.Camera3D.Position, downVector)
+		e.Camera3D.Target = rl.Vector3Add(e.Camera3D.Target, downVector)
 	}
 }
 
