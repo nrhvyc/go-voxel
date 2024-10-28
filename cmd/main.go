@@ -1,6 +1,6 @@
 package main
 
-import "github.com/nrhvyc/voxel-engine/voxel"
+import "github.com/nrhvyc/go-voxel/voxel"
 
 func main() {
 	engine, err := voxel.NewEngine()

@@ -45,8 +45,8 @@ type Engine struct {
 	World         *World
 	Camera        *Camera
 	ShaderProgram uint32
-	VAO           uint32
-	VBO           uint32
+	VAO           uint32 // vertex array object
+	VBO           uint32 // vertex buffer object
 }
 
 // Vertex data for a single cube
@@ -158,8 +158,10 @@ func (e *Engine) initBuffers() {
 	gl.BufferData(gl.ARRAY_BUFFER, len(cubeVertices)*4, gl.Ptr(cubeVertices), gl.STATIC_DRAW)
 
 	// Set vertex attributes
-	gl.VertexAttribPointer(0, 3, gl.FLOAT, false, 3*4, gl.PtrOffset(0))
+	gl.VertexAttribPointer(0, 3, gl.FLOAT, false, 6*4, gl.PtrOffset(0))
 	gl.EnableVertexAttribArray(0)
+	gl.VertexAttribPointer(1, 3, gl.FLOAT, false, 6*4, gl.PtrOffset(3*4))
+	gl.EnableVertexAttribArray(1)
 
 	// Unbind VAO and VBO
 	gl.BindBuffer(gl.ARRAY_BUFFER, 0)
@@ -208,21 +210,25 @@ func (e *Engine) initShaders() {
 	vertexShader := `
 		#version 410
 		layout (location = 0) in vec3 position;
+		layout (location = 1) in vec3 color;
+		out vec3 fragColor;
 		uniform mat4 projection;
 		uniform mat4 view;
 		uniform mat4 model;
 		void main() {
 			gl_Position = projection * view * model * vec4(position, 1.0);
+			fragColor = color;
 		}
 	`
 	// GLSL fragment shader
 	fragmentShader := `
 		#version 410
+		in vec3 fragColor;
 		out vec4 FragColor;
 		void main() {
-			FragColor = vec4(0.8, 0.3, 0.2, 1.0);  // Red-ish color
+			FragColor = vec4(fragColor, 1.0);
 		}
-	`
+    `
 
 	e.ShaderProgram = createShaderProgram(vertexShader, fragmentShader)
 }
@@ -268,7 +274,7 @@ func (e *Engine) handleInput() {
 	if e.Window.GetKey(glfw.KeySpace) == glfw.Press {
 		e.Camera.Position = e.Camera.Position.Add(e.Camera.Up.Mul(speed))
 	}
-	if e.Window.GetKey(glfw.KeyLeftControl) == glfw.Press {
+	if e.Window.GetKey(glfw.KeyLeftShift) == glfw.Press {
 		e.Camera.Position = e.Camera.Position.Sub(e.Camera.Up.Mul(speed))
 	}
 }
@@ -312,6 +318,13 @@ func (e *Engine) renderChunk(chunk *Chunk) {
 					).Mul4(mgl32.Scale3D(0.9, 0.9, 0.9))
 					modelLoc := gl.GetUniformLocation(e.ShaderProgram, gl.Str("model\x00"))
 					gl.UniformMatrix4fv(modelLoc, 1, false, &model[0])
+
+					// Set color based on voxel type or position
+					r := float32(x) / 16.0
+					g := float32(y) / 16.0
+					b := float32(z) / 16.0
+					colorLoc := gl.GetUniformLocation(e.ShaderProgram, gl.Str("color\x00"))
+					gl.Uniform3f(colorLoc, r, g, b)
 
 					gl.DrawArrays(gl.TRIANGLES, 0, 36)
 				}
