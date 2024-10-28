@@ -2,9 +2,10 @@ module github.com/nrhvyc/go-voxel
 
 go 1.23.2
 
+require github.com/gen2brain/raylib-go/raylib v0.0.0-20241024060513-f2ab1b0c358a
+
 require (
-	github.com/go-gl/gl v0.0.0-20231021071112-07e5d0ea2e71 // indirect
-	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240506104042-037f3cc74f2a // indirect
-	github.com/go-gl/mathgl v1.1.0 // indirect
-	golang.org/x/image v0.0.0-20190321063152-3fc05d484e9f // indirect
+	github.com/ebitengine/purego v0.7.1 // indirect
+	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 // indirect
+	golang.org/x/sys v0.20.0 // indirect
 )
