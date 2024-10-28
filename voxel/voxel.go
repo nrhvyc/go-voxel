@@ -31,8 +31,9 @@ type Camera struct {
 
 // Engine is the main engine struct
 type Engine struct {
-	World  *World
-	Camera *Camera
+	*Camera
+
+	World *World
 }
 
 // Vertex data for a single cube
@@ -159,26 +160,62 @@ func (e *Engine) handleInput() {
 
 	// Forward/Backward
 	if rl.IsKeyDown(rl.KeyW) {
-		e.Camera.Camera3D.Position = rl.Vector3Add(e.Camera.Camera3D.Position, rl.Vector3Scale(rl.Vector3Subtract(e.Camera.Camera3D.Target, e.Camera.Camera3D.Position), speed))
+		e.Camera.Camera3D.Position = rl.Vector3Add(
+			e.Camera.Camera3D.Position,
+			rl.Vector3Scale(
+				rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
+				speed,
+			),
+		)
 	}
 	if rl.IsKeyDown(rl.KeyS) {
-		e.Camera.Camera3D.Position = rl.Vector3Subtract(e.Camera.Camera3D.Position, rl.Vector3Scale(rl.Vector3Subtract(e.Camera.Camera3D.Target, e.Camera.Camera3D.Position), speed))
+		e.Camera3D.Position = rl.Vector3Subtract(
+			e.Camera3D.Position,
+			rl.Vector3Scale(
+				rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
+				speed,
+			),
+		)
 	}
 
 	// Left/Right
 	if rl.IsKeyDown(rl.KeyA) {
-		e.Camera.Camera3D.Position = rl.Vector3Subtract(e.Camera.Camera3D.Position, rl.Vector3Scale(rl.Vector3CrossProduct(rl.Vector3Subtract(e.Camera.Camera3D.Target, e.Camera.Camera3D.Position), e.Camera.Camera3D.Up), speed))
+		e.Camera3D.Position = rl.Vector3Subtract(
+			e.Camera3D.Position,
+			rl.Vector3Scale(
+				rl.Vector3CrossProduct(
+					rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
+					e.Camera3D.Up,
+				),
+				speed,
+			),
+		)
 	}
 	if rl.IsKeyDown(rl.KeyD) {
-		e.Camera.Camera3D.Position = rl.Vector3Add(e.Camera.Camera3D.Position, rl.Vector3Scale(rl.Vector3CrossProduct(rl.Vector3Subtract(e.Camera.Camera3D.Target, e.Camera.Camera3D.Position), e.Camera.Camera3D.Up), speed))
+		e.Camera3D.Position = rl.Vector3Add(
+			e.Camera3D.Position,
+			rl.Vector3Scale(
+				rl.Vector3CrossProduct(
+					rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
+					e.Camera3D.Up,
+				),
+				speed,
+			),
+		)
 	}
 
 	// Up/Down
 	if rl.IsKeyDown(rl.KeySpace) {
-		e.Camera.Camera3D.Position = rl.Vector3Add(e.Camera.Camera3D.Position, rl.Vector3Scale(e.Camera.Camera3D.Up, speed))
+		e.Camera3D.Position = rl.Vector3Add(
+			e.Camera3D.Position,
+			rl.Vector3Scale(e.Camera3D.Up, speed),
+		)
 	}
 	if rl.IsKeyDown(rl.KeyLeftControl) {
-		e.Camera.Camera3D.Position = rl.Vector3Subtract(e.Camera.Camera3D.Position, rl.Vector3Scale(e.Camera.Camera3D.Up, speed))
+		e.Camera3D.Position = rl.Vector3Subtract(
+			e.Camera3D.Position,
+			rl.Vector3Scale(e.Camera3D.Up, speed),
+		)
 	}
 }
 
