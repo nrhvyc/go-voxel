@@ -1,7 +1,17 @@
 package voxel
 
 import (
+	"fmt"
+
 	rl "github.com/gen2brain/raylib-go/raylib"
+)
+
+const (
+	mouseRotateSpeed = 0.003
+)
+
+var (
+	worldUp = rl.Vector3{X: 0, Y: 1, Z: 0}
 )
 
 // var handler slog.Handler = slog.NewTextHandler(os.Stdout, nil)
@@ -158,7 +168,7 @@ func (e *Engine) handleInput() {
 		speed *= 2
 	}
 
-	// Forward/Backward
+	// Forward
 	if rl.IsKeyDown(rl.KeyW) {
 		e.Camera3D.Position = rl.Vector3Add(
 			e.Camera3D.Position,
@@ -172,6 +182,8 @@ func (e *Engine) handleInput() {
 		// 2. Scaling this vector by the speed
 		// 3. Adding the scaled vector to the current position
 	}
+
+	// Backward
 	if rl.IsKeyDown(rl.KeyS) {
 		e.Camera3D.Position = rl.Vector3Subtract(
 			e.Camera3D.Position,
@@ -186,7 +198,7 @@ func (e *Engine) handleInput() {
 		// 3. Subtracting the scaled vector from the current position
 	}
 
-	// Left/Right
+	// Left
 	if rl.IsKeyDown(rl.KeyA) {
 		e.Camera3D.Position = rl.Vector3Subtract(
 			e.Camera3D.Position,
@@ -209,6 +221,8 @@ func (e *Engine) handleInput() {
 			),
 		)
 	}
+
+	// Right
 	if rl.IsKeyDown(rl.KeyD) {
 		e.Camera3D.Position = rl.Vector3Add(
 			e.Camera3D.Position,
@@ -232,17 +246,58 @@ func (e *Engine) handleInput() {
 		)
 	}
 
-	// Up/Down
+	// Up
 	if rl.IsKeyDown(rl.KeySpace) {
 		upVector := rl.Vector3Scale(e.Camera3D.Up, speed*10)
 		e.Camera3D.Position = rl.Vector3Add(e.Camera3D.Position, upVector)
 		e.Camera3D.Target = rl.Vector3Add(e.Camera3D.Target, upVector)
 	}
+
+	// Down
 	if rl.IsKeyDown(rl.KeyLeftAlt) {
 		downVector := rl.Vector3Scale(e.Camera3D.Up, -speed*10)
 		e.Camera3D.Position = rl.Vector3Add(e.Camera3D.Position, downVector)
 		e.Camera3D.Target = rl.Vector3Add(e.Camera3D.Target, downVector)
 	}
+
+	// Mouse Camera rotation
+	mousePositionDelta := rl.GetMouseDelta()
+	mouseInvertOption := false // TODO: extract as config option
+	var mouseInvert float32 = 1
+	if mouseInvertOption {
+		mouseInvert = -1
+	}
+
+	// Horizontal camera rotation
+	e.Camera3D.Target = rl.Vector3Add(
+		e.Camera3D.Position,
+		rl.Vector3Transform(
+			rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
+			rl.MatrixRotateY(mouseInvert*mousePositionDelta.X*mouseRotateSpeed),
+		),
+	)
+
+	// Vertical rotation - TODO: need to limit this so we don't flip over
+	newTarget := rl.Vector3Add(
+		e.Camera3D.Position,
+		rl.Vector3Transform(
+			rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
+			rl.MatrixRotateX(mouseInvert*mousePositionDelta.Y*mouseRotateSpeed),
+		),
+	)
+	camDirection := rl.Vector3Subtract(newTarget, e.Camera3D.Position)
+	angle := rl.Rad2deg * rl.Vector3Angle(camDirection, worldUp)
+
+	fmt.Printf("angle: %f\n", angle)
+
+	if angle >= 20 && angle <= 160 {
+		fmt.Printf("change angle: %f\n", angle)
+		e.Camera3D.Target = newTarget
+	}
+
+	// Hide cursor and center it
+	rl.HideCursor()
+	rl.SetMousePosition(rl.GetScreenWidth()/2, rl.GetScreenHeight()/2)
 }
 
 // Render the world
