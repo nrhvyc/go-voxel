@@ -1,8 +1,6 @@
 package voxel
 
 import (
-	"fmt"
-
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -11,7 +9,8 @@ const (
 )
 
 var (
-	worldUp = rl.Vector3{X: 0, Y: 1, Z: 0}
+	worldUp      = rl.Vector3{X: 0, Y: 1, Z: 0}
+	worldForward = rl.Vector3{X: 0, Y: 0, Z: 1}
 )
 
 // var handler slog.Handler = slog.NewTextHandler(os.Stdout, nil)
@@ -121,6 +120,21 @@ func NewCamera() *Camera {
 			Projection: rl.CameraPerspective,
 		},
 	}
+}
+
+// GetHorizontalAngleToForward returns the angle between camera vector and world forward vector
+func GetHorizontalAngleToForward(cameraVec rl.Vector3) float32 {
+	// Create 2D vectors by ignoring Y component
+	camDirection2D := rl.Vector2{X: cameraVec.X, Y: cameraVec.Z}
+	forward2D := rl.Vector2{X: worldForward.X, Y: worldForward.Z}
+
+	// Normalize the vectors
+	camDirection2D = rl.Vector2Normalize(camDirection2D)
+	forward2D = rl.Vector2Normalize(forward2D)
+
+	// Calculate angle in radians and convert to degrees
+	angle := rl.Rad2deg * rl.Vector2Angle(camDirection2D, forward2D)
+	return angle
 }
 
 // Create a new world
@@ -277,21 +291,25 @@ func (e *Engine) handleInput() {
 		),
 	)
 
-	// Vertical rotation - TODO: need to limit this so we don't flip over
+	// Vertical rotation
+	cameraVec := rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position)
+	right := rl.Vector3CrossProduct(cameraVec, e.Camera3D.Up)
+	right = rl.Vector3Normalize(right)
+
+	// Create rotation matrix around right vector
+	rotationMatrix := rl.MatrixRotate(right, -1*mouseInvert*mousePositionDelta.Y*mouseRotateSpeed)
+
 	newTarget := rl.Vector3Add(
 		e.Camera3D.Position,
-		rl.Vector3Transform(
-			rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
-			rl.MatrixRotateX(mouseInvert*mousePositionDelta.Y*mouseRotateSpeed),
-		),
+		rl.Vector3Transform(cameraVec, rotationMatrix),
 	)
+
+	// Calculate vertical angle for clamping
 	camDirection := rl.Vector3Subtract(newTarget, e.Camera3D.Position)
-	angle := rl.Rad2deg * rl.Vector3Angle(camDirection, worldUp)
+	angleVertical := rl.Rad2deg * rl.Vector3Angle(camDirection, e.Camera3D.Up)
 
-	fmt.Printf("angle: %f\n", angle)
-
-	if angle >= 20 && angle <= 160 {
-		fmt.Printf("change angle: %f\n", angle)
+	// Clamp vertical rotation between 20 and 160 degrees
+	if angleVertical >= 20 && angleVertical <= 160 {
 		e.Camera3D.Target = newTarget
 	}
 
@@ -304,7 +322,7 @@ func (e *Engine) handleInput() {
 func (e *Engine) render() {
 	rl.BeginDrawing()
 	rl.ClearBackground(rl.RayWhite)
-	rl.BeginMode3D(e.Camera.Camera3D)
+	rl.BeginMode3D(e.Camera3D)
 
 	// Render chunks
 	for _, chunk := range e.World.Chunks {
