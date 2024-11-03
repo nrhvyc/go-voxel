@@ -1,4 +1,4 @@
-package voxel
+package game
 
 import (
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -163,8 +163,6 @@ func NewWorld() *World {
 
 	return world
 }
-
-// No need for initShaders function in Raylib
 
 // Main render loop
 func (e *Engine) Run() {
