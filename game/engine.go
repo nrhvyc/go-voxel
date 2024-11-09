@@ -86,19 +86,6 @@ func NewEngine() (*Engine, error) {
 	return engine, nil
 }
 
-// Create a new camera
-func NewCamera() *Camera {
-	return &Camera{
-		Camera3D: rl.Camera3D{
-			Position:   rl.NewVector3(0, 0, 20),
-			Target:     rl.NewVector3(0, 0, 0),
-			Up:         rl.NewVector3(0, 1, 0),
-			Fovy:       45.0,
-			Projection: rl.CameraPerspective,
-		},
-	}
-}
-
 // GetHorizontalAngleToForward returns the angle between camera vector and world forward vector
 func GetHorizontalAngleToForward(cameraVec rl.Vector3) float32 {
 	// Create 2D vectors by ignoring Y component
@@ -312,6 +299,13 @@ func (e *Engine) render() {
 			e.Camera3D.Target.Z,
 		),
 		10, 50, 20, rl.Black,
+	)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Chunk Pos: (%#v)",
+			e.World.Chunks["0,0,0"].Position,
+		),
+		10, 70, 20, rl.Black,
 	)
 
 	rl.EndDrawing()

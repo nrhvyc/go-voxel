@@ -24,18 +24,31 @@ func NewWorld() *World {
 	chunk := &Chunk{
 		Position: rl.NewVector3(0, 0, 0),
 	}
-	for x := 0; x < 16; x++ {
-		for y := 0; y < 16; y++ {
-			for z := 0; z < 16; z++ {
-				if x == 0 || y == 0 || z == 0 || x == 15 || y == 15 || z == 15 {
-					chunk.Voxels[x][y][z] = &Voxel{
-						Position: rl.NewVector3(float32(x), float32(y), float32(z)),
-						Type:     1,
-					}
-				}
+
+	// for x := 0; x < 16; x++ {
+	// 	for y := 0; y < 16; y++ {
+	// 		for z := 0; z < 16; z++ {
+	// 			if x == 0 || y == 0 || z == 0 || x == 15 || y == 15 || z == 15 {
+	// 				chunk.Voxels[x][y][z] = &Voxel{
+	// 					Position: rl.NewVector3(float32(x), float32(y), float32(z)),
+	// 					Type:     1,
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	y := chunkHeight / 2 // height
+	// y := 0
+	for x := uint8(0); x < chunkLength; x++ {
+		for z := uint8(0); z < chunkLength; z++ {
+			chunk.Voxels[x][y][z] = &Voxel{
+				Position: rl.NewVector3(float32(x), float32(y), float32(z)),
+				Type:     1,
 			}
 		}
 	}
+
 	world.Chunks["0,0,0"] = chunk
 
 	return world

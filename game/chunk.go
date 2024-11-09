@@ -4,9 +4,14 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
+const (
+	chunkLength uint8 = 32  // x and z coords
+	chunkHeight uint8 = 255 // y coords
+)
+
 // Chunk represents a 16x16x16 section of voxels
 type Chunk struct {
-	Voxels   [16][16][16]*Voxel
+	Voxels   [chunkLength][chunkHeight][chunkLength]*Voxel
 	Position rl.Vector3
 }
 
