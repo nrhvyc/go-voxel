@@ -1,9 +1,9 @@
 package main
 
-import "github.com/nrhvyc/go-voxel/voxel"
+import "github.com/nrhvyc/go-voxel/game"
 
 func main() {
-	engine, err := voxel.NewEngine()
+	engine, err := game.NewEngine()
 	if err != nil {
 		panic(err)
 	}

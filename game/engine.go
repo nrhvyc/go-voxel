@@ -1,6 +1,8 @@
 package game
 
 import (
+	"fmt"
+
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -137,6 +139,13 @@ func (e *Engine) handleInput() {
 				speed,
 			),
 		)
+		e.Camera3D.Target = rl.Vector3Add(
+			e.Camera3D.Target,
+			rl.Vector3Scale(
+				rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
+				speed,
+			),
+		)
 		// This moves the camera forward by:
 		// 1. Calculating the direction vector (Target - Position)
 		// 2. Scaling this vector by the speed
@@ -147,6 +156,13 @@ func (e *Engine) handleInput() {
 	if rl.IsKeyDown(rl.KeyS) {
 		e.Camera3D.Position = rl.Vector3Subtract(
 			e.Camera3D.Position,
+			rl.Vector3Scale(
+				rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
+				speed,
+			),
+		)
+		e.Camera3D.Target = rl.Vector3Subtract(
+			e.Camera3D.Target,
 			rl.Vector3Scale(
 				rl.Vector3Subtract(e.Camera3D.Target, e.Camera3D.Position),
 				speed,
@@ -276,5 +292,27 @@ func (e *Engine) render() {
 	}
 
 	rl.EndMode3D()
+
+	// Draw debug text
+	rl.DrawFPS(10, 10)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Camera Pos: (%.2f, %.2f, %.2f)",
+			e.Camera3D.Position.X,
+			e.Camera3D.Position.Y,
+			e.Camera3D.Position.Z,
+		),
+		10, 30, 20, rl.Black,
+	)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Target Pos: (%.2f, %.2f, %.2f)",
+			e.Camera3D.Target.X,
+			e.Camera3D.Target.Y,
+			e.Camera3D.Target.Z,
+		),
+		10, 50, 20, rl.Black,
+	)
+
 	rl.EndDrawing()
 }
