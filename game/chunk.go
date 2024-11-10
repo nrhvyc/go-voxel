@@ -17,9 +17,9 @@ type Chunk struct {
 
 // Render a single chunk
 func (c *Chunk) render() {
-	for x := 0; x < 16; x++ {
-		for y := 0; y < 16; y++ {
-			for z := 0; z < 16; z++ {
+	for x := uint8(0); x < chunkLength; x++ {
+		for y := uint8(0); y < chunkHeight; y++ {
+			for z := uint8(0); z < chunkLength; z++ {
 				if voxel := c.Voxels[x][y][z]; voxel != nil {
 					position := rl.Vector3Add(c.Position, rl.NewVector3(float32(x), float32(y), float32(z)))
 					color := rl.NewColor(uint8(x*16), uint8(y*16), uint8(z*16), 255)

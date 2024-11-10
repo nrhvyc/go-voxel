@@ -1,8 +1,8 @@
 package game
 
 import (
-	// rl "github.com/gen2brain/raylib-go/raylib"
-	"math"
+// rl "github.com/gen2brain/raylib-go/raylib"
+// "math"
 )
 
 // Permutation table
@@ -22,16 +22,16 @@ var permutation = []int{
 }
 
 // Noise returns a Perlin noise value for the given coordinates
-func Noise(x, y, z float32) float32 {
-	// Convert float coordinates to integer grid coordinates
-	xi := int(math.Floor(float64(x))) & 255
-	yi := int(math.Floor(float64(y))) & 255
-	zi := int(math.Floor(float64(z))) & 255
+func Noise(x, y, z uint8) float32 {
+	// Use integer coordinates directly since input is already uint8
+	xi := int(x) & 255
+	yi := int(y) & 255
+	zi := int(z) & 255
 
-	// Get decimal part of coordinates
-	xf := x - float32(math.Floor(float64(x)))
-	yf := y - float32(math.Floor(float64(y)))
-	zf := z - float32(math.Floor(float64(z)))
+	// Convert to normalized coordinates in [0,1]
+	xf := float32(x % 1)
+	yf := float32(y % 1)
+	zf := float32(z % 1)
 
 	// Compute fade curves
 	u := fade(xf)
