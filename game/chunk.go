@@ -9,6 +9,8 @@ const (
 	chunkHeight uint8 = 255 // y coords
 )
 
+type ChunkID string
+
 // Chunk represents a 16x16x16 section of voxels
 type Chunk struct {
 	Voxels   [chunkLength][chunkHeight][chunkLength]*Voxel

@@ -13,13 +13,13 @@ var (
 
 // World contains all chunks
 type World struct {
-	Chunks map[string]*Chunk
+	Chunks map[ChunkID]*Chunk
 }
 
 // Create a new world
 func NewWorld() *World {
 	world := &World{
-		Chunks: make(map[string]*Chunk),
+		Chunks: make(map[ChunkID]*Chunk),
 	}
 
 	// Add a single chunk with some voxels
