@@ -1,8 +1,6 @@
 package game
 
 import (
-	"fmt"
-
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -32,7 +30,6 @@ func NewWorld() *World {
 			for z := uint8(0); z < chunkLength; z++ {
 				// if x == 0 || y == 0 || z == 0 || x == 15 || y == 15 || z == 15 {
 				height := Noise(x, y, z)
-				fmt.Printf("height: %f", height)
 				chunk.Voxels[x][uint8(height)][z] = &Voxel{
 					// Position: rl.NewVector3(float32(x), float32(y), float32(z)),
 					Position: rl.NewVector3(float32(x), height, float32(z)),

@@ -13,6 +13,8 @@ const (
 // Camera represents the player's view
 type Camera struct {
 	Camera3D rl.Camera3D
+
+	Frustum Frustum
 }
 
 // Engine is the main engine struct
@@ -22,60 +24,10 @@ type Engine struct {
 	World *World
 }
 
-// Vertex data for a single cube
-var cubeVertices = []float32{
-	// Front face
-	-0.5, -0.5, 0.5,
-	0.5, -0.5, 0.5,
-	0.5, 0.5, 0.5,
-	0.5, 0.5, 0.5,
-	-0.5, 0.5, 0.5,
-	-0.5, -0.5, 0.5,
-
-	// Back face
-	-0.5, -0.5, -0.5,
-	-0.5, 0.5, -0.5,
-	0.5, 0.5, -0.5,
-	0.5, 0.5, -0.5,
-	0.5, -0.5, -0.5,
-	-0.5, -0.5, -0.5,
-
-	// Top face
-	-0.5, 0.5, -0.5,
-	-0.5, 0.5, 0.5,
-	0.5, 0.5, 0.5,
-	0.5, 0.5, 0.5,
-	0.5, 0.5, -0.5,
-	-0.5, 0.5, -0.5,
-
-	// Bottom face
-	-0.5, -0.5, -0.5,
-	0.5, -0.5, -0.5,
-	0.5, -0.5, 0.5,
-	0.5, -0.5, 0.5,
-	-0.5, -0.5, 0.5,
-	-0.5, -0.5, -0.5,
-
-	// Right face
-	0.5, -0.5, -0.5,
-	0.5, 0.5, -0.5,
-	0.5, 0.5, 0.5,
-	0.5, 0.5, 0.5,
-	0.5, -0.5, 0.5,
-	0.5, -0.5, -0.5,
-
-	// Left face
-	-0.5, -0.5, -0.5,
-	-0.5, -0.5, 0.5,
-	-0.5, 0.5, 0.5,
-	-0.5, 0.5, 0.5,
-	-0.5, 0.5, -0.5,
-	-0.5, -0.5, -0.5,
-}
-
 // Initialize the engine
 func NewEngine() (*Engine, error) {
-	rl.InitWindow(800, 600, "Voxel Engine")
+	// rl.InitWindow(800, 600, "Voxel Engine")
+	rl.InitWindow(1000, 800, "Voxel Engine")
 	rl.SetTargetFPS(60)
 
 	engine := &Engine{
@@ -105,6 +57,7 @@ func GetHorizontalAngleToForward(cameraVec rl.Vector3) float32 {
 func (e *Engine) Run() {
 	for !rl.WindowShouldClose() {
 		e.handleInput()
+		e.Camera.UpdateFrustum()
 		e.render()
 	}
 	rl.CloseWindow()
@@ -306,6 +259,48 @@ func (e *Engine) render() {
 			e.World.Chunks["0,0,0"].Position,
 		),
 		10, 70, 20, rl.Black,
+	)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Frustum.left: (%v)",
+			e.Camera.Frustum.left,
+		),
+		10, 90, 10, rl.Black,
+	)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Frustum.right: (%v)",
+			e.Camera.Frustum.right,
+		),
+		10, 100, 10, rl.Black,
+	)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Frustum.near: (%v)",
+			e.Camera.Frustum.near,
+		),
+		10, 110, 10, rl.Black,
+	)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Frustum.far: (%v)",
+			e.Camera.Frustum.far,
+		),
+		10, 120, 10, rl.Black,
+	)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Frustum.top: (%v)",
+			e.Camera.Frustum.top,
+		),
+		10, 130, 10, rl.Black,
+	)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Frustum.bottom: (%v)",
+			e.Camera.Frustum.bottom,
+		),
+		10, 140, 10, rl.Black,
 	)
 
 	rl.EndDrawing()
