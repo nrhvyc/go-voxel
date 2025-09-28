@@ -28,7 +28,7 @@ func NewCamera() *Camera {
 		Frustum: Frustum{},
 	}
 
-	camera.UpdateFrustum()
+	// camera.UpdateFrustum()
 
 	return &camera
 }
@@ -70,11 +70,11 @@ func (c *Camera) UpdateFrustum() {
 		rl.MatrixRotate(c.Camera3D.Up, -halfFovyRadians+ninetyDegRadians),
 	)
 
-	worldMatrix := rl.MatrixInvert(rl.GetCameraMatrix(c.Camera3D))
+	// worldMatrix := rl.MatrixInvert(rl.GetCameraMatrix(c.Camera3D))
 
-	viewToWorld := func(view rl.Vector3) (world rl.Vector3) {
-		return rl.Vector3Transform(view, worldMatrix)
-	}
+	// viewToWorld := func(view rl.Vector3) (world rl.Vector3) {
+	// 	return rl.Vector3Transform(view, worldMatrix)
+	// }
 	// TODO: convert the frustum to world space
 
 	/*
