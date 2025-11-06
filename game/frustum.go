@@ -12,3 +12,8 @@ type Plane struct {
 	normal   rl.Vector3
 	distance float32 // dotProduct(normal vector, point on plane) = distance
 }
+
+// TODO: implement
+// func (f Frustum) IsInView(bounds AABB) bool {
+// 	return false
+// }

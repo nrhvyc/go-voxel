@@ -21,9 +21,9 @@ type Chunk struct {
 func (c *Chunk) render() {
 	// Eventually add a check for whether the chunk is in view of the frustum
 
-	for x := uint8(0); x < chunkLength; x++ {
-		for y := uint8(0); y < chunkHeight; y++ {
-			for z := uint8(0); z < chunkLength; z++ {
+	for x := range chunkLength {
+		for y := range chunkHeight {
+			for z := range chunkLength {
 				/*
 				* TODO: need to add frustum culling here
 				 */

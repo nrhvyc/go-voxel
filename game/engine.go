@@ -234,6 +234,12 @@ func (e *Engine) render() {
 	rl.EndMode3D()
 
 	// Draw debug text
+	e.drawDebugText()
+
+	rl.EndDrawing()
+}
+
+func (e *Engine) drawDebugText() {
 	rl.DrawFPS(10, 10)
 	rl.DrawText(
 		fmt.Sprintf(
@@ -303,5 +309,4 @@ func (e *Engine) render() {
 		10, 140, 10, rl.Black,
 	)
 
-	rl.EndDrawing()
 }
