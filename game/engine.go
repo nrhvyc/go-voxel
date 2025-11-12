@@ -63,6 +63,25 @@ func (e *Engine) Run() {
 	rl.CloseWindow()
 }
 
+// Render the world
+func (e *Engine) render() {
+	rl.BeginDrawing()
+	rl.ClearBackground(rl.RayWhite)
+	rl.BeginMode3D(e.Camera3D)
+
+	// Render chunks
+	for _, chunk := range e.World.Chunks {
+		chunk.render()
+	}
+
+	rl.EndMode3D()
+
+	// Draw debug text
+	e.drawDebugText()
+
+	rl.EndDrawing()
+}
+
 // Handle keyboard input
 func (e *Engine) handleInput() {
 	speed := float32(0.005)
@@ -220,25 +239,6 @@ func (e *Engine) handleInput() {
 	rl.SetMousePosition(rl.GetScreenWidth()/2, rl.GetScreenHeight()/2)
 }
 
-// Render the world
-func (e *Engine) render() {
-	rl.BeginDrawing()
-	rl.ClearBackground(rl.RayWhite)
-	rl.BeginMode3D(e.Camera3D)
-
-	// Render chunks
-	for _, chunk := range e.World.Chunks {
-		chunk.render()
-	}
-
-	rl.EndMode3D()
-
-	// Draw debug text
-	e.drawDebugText()
-
-	rl.EndDrawing()
-}
-
 func (e *Engine) drawDebugText() {
 	rl.DrawFPS(10, 10)
 	rl.DrawText(
@@ -262,7 +262,7 @@ func (e *Engine) drawDebugText() {
 	rl.DrawText(
 		fmt.Sprintf(
 			"Chunk Pos: (%#v)",
-			e.World.Chunks["0,0,0"].Position,
+			e.World.Chunks["0,0,0"].worldPosition,
 		),
 		10, 70, 20, rl.Black,
 	)

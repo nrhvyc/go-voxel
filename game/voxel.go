@@ -7,5 +7,15 @@ import (
 // Voxel represents a single cube in the world
 type Voxel struct {
 	Position rl.Vector3
-	Type     int
+	Type     VoxelType
 }
+
+type VoxelType int
+
+const (
+	_ VoxelType = iota
+	grass
+	dirt
+)
+
+var VoxelOutlineColor = rl.NewColor(uint8(0), uint8(0), uint8(0), 255)
