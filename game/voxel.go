@@ -18,4 +18,4 @@ const (
 	dirt
 )
 
-var VoxelOutlineColor = rl.NewColor(uint8(0), uint8(0), uint8(0), 255)
+var VoxelOutlineColor = rl.Black

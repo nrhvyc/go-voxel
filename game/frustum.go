@@ -14,6 +14,6 @@ type Plane struct {
 }
 
 // TODO: implement
-// func (f Frustum) IsInView(bounds AABB) bool {
+// func (f Frustum) Intersection(bb rl.BoundingBox) bool {
 // 	return false
 // }

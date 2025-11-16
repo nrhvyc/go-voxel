@@ -22,11 +22,11 @@ func NewDebugger(e *Engine) Debugger {
 func (d Debugger) Render() {
 	rl.DrawFPS(10, 10)
 
-	d.drawFrustumDebug()
-	d.drawCameraDebug()
+	d.FrustumDebug() // camera frustum
+	d.CameraDebug()
 }
 
-func (d Debugger) drawFrustumDebug() {
+func (d Debugger) FrustumDebug() {
 	rl.DrawText(
 		fmt.Sprintf(
 			"Frustum.left: (%v)",
@@ -71,7 +71,7 @@ func (d Debugger) drawFrustumDebug() {
 	)
 }
 
-func (d Debugger) drawCameraDebug() {
+func (d Debugger) CameraDebug() {
 	rl.DrawText(
 		fmt.Sprintf(
 			"Camera Pos: (%.2f, %.2f, %.2f)",

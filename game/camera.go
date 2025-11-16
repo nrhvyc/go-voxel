@@ -11,6 +11,13 @@ const ninetyDegRadians = 90.0 * (math.Pi / 180.0)
 const frustumRenderDistance = 50
 const frustumNearDistance = 0.1
 
+// Camera represents the player's view
+type Camera struct {
+	Camera3D rl.Camera3D
+
+	Frustum Frustum
+}
+
 // Create a new camera
 func NewCamera() *Camera {
 	camera := Camera{
