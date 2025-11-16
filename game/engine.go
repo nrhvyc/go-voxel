@@ -1,8 +1,6 @@
 package game
 
 import (
-	"fmt"
-
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -21,7 +19,8 @@ type Camera struct {
 type Engine struct {
 	*Camera
 
-	World *World
+	World    *World
+	Debugger *Debugger
 }
 
 // Initialize the engine
@@ -34,6 +33,10 @@ func NewEngine() (*Engine, error) {
 		World:  NewWorld(),
 		Camera: NewCamera(),
 	}
+
+	// Initialize the debugger
+	debugger := NewDebugger(engine)
+	engine.Debugger = &debugger
 
 	return engine, nil
 }
@@ -76,8 +79,7 @@ func (e *Engine) render() {
 
 	rl.EndMode3D()
 
-	// Draw debug text
-	e.drawDebugText()
+	e.Debugger.Render()
 
 	rl.EndDrawing()
 }
@@ -237,76 +239,4 @@ func (e *Engine) handleInput() {
 	// Hide cursor and center it
 	rl.HideCursor()
 	rl.SetMousePosition(rl.GetScreenWidth()/2, rl.GetScreenHeight()/2)
-}
-
-func (e *Engine) drawDebugText() {
-	rl.DrawFPS(10, 10)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Camera Pos: (%.2f, %.2f, %.2f)",
-			e.Camera3D.Position.X,
-			e.Camera3D.Position.Y,
-			e.Camera3D.Position.Z,
-		),
-		10, 30, 20, rl.Black,
-	)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Target Pos: (%.2f, %.2f, %.2f)",
-			e.Camera3D.Target.X,
-			e.Camera3D.Target.Y,
-			e.Camera3D.Target.Z,
-		),
-		10, 50, 20, rl.Black,
-	)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Chunk Pos: (%#v)",
-			e.World.Chunks["0,0,0"].worldPosition,
-		),
-		10, 70, 20, rl.Black,
-	)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Frustum.left: (%v)",
-			e.Camera.Frustum.left,
-		),
-		10, 90, 10, rl.Black,
-	)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Frustum.right: (%v)",
-			e.Camera.Frustum.right,
-		),
-		10, 100, 10, rl.Black,
-	)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Frustum.near: (%v)",
-			e.Camera.Frustum.near,
-		),
-		10, 110, 10, rl.Black,
-	)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Frustum.far: (%v)",
-			e.Camera.Frustum.far,
-		),
-		10, 120, 10, rl.Black,
-	)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Frustum.top: (%v)",
-			e.Camera.Frustum.top,
-		),
-		10, 130, 10, rl.Black,
-	)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Frustum.bottom: (%v)",
-			e.Camera.Frustum.bottom,
-		),
-		10, 140, 10, rl.Black,
-	)
-
 }
