@@ -15,7 +15,7 @@ const frustumNearDistance = 0.1
 type Camera struct {
 	Camera3D rl.Camera3D
 
-	Frustum Frustum
+	Frustum Frustum // currently in world space
 }
 
 // Create a new camera
@@ -35,7 +35,7 @@ func NewCamera() *Camera {
 		Frustum: Frustum{},
 	}
 
-	// camera.UpdateFrustum()
+	camera.UpdateFrustum()
 
 	return &camera
 }

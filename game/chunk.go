@@ -19,6 +19,10 @@ var (
 
 type ChunkID string
 
+func (id ChunkID) String() string {
+	return string(id)
+}
+
 // Chunk represents a 16x16x16 section of voxels
 type Chunk struct {
 	Voxels [chunkLength][chunkHeight][chunkLength]*Voxel
@@ -103,9 +107,6 @@ func (c *Chunk) render() {
 	for x := range chunkLength {
 		for y := range chunkHeight {
 			for z := range chunkLength {
-				/*
-				* TODO: need to add frustum culling here
-				 */
 
 				// Skip missing voxels
 				if c.Voxels[x][y][z] == nil {

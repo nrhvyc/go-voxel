@@ -65,14 +65,25 @@ func (e *Engine) render() {
 	rl.ClearBackground(rl.RayWhite)
 	rl.BeginMode3D(e.Camera3D)
 
+	chunksRendered := []ChunkID{}
+
 	// Render chunks
 	for _, chunk := range e.World.Chunks {
+		// TODO: intersection check for chunk and camara frustum here.
+		// might pass this info to the chunk if only part of the chunk
+		// is interecting so only some voxels are rendered
+		if e.Camera.Frustum.Intersection(chunk.boundingBox) {
+			chunksRendered = append(chunksRendered, chunk.ID)
+		}
+
 		chunk.render()
 	}
 
 	rl.EndMode3D()
 
-	e.Debugger.Render()
+	e.Debugger.Render(debugRenderInfo{
+		chunksRendered: chunksRendered,
+	})
 
 	rl.EndDrawing()
 }

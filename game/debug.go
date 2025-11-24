@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"sort"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -19,56 +20,16 @@ func NewDebugger(e *Engine) Debugger {
 	}
 }
 
-func (d Debugger) Render() {
+type debugRenderInfo struct {
+	chunksRendered []ChunkID
+}
+
+func (d Debugger) Render(info debugRenderInfo) {
 	rl.DrawFPS(10, 10)
 
 	d.FrustumDebug() // camera frustum
 	d.CameraDebug()
-}
-
-func (d Debugger) FrustumDebug() {
-	rl.DrawText(
-		fmt.Sprintf(
-			"Frustum.left: (%v)",
-			d.engine.Camera.Frustum.left,
-		),
-		10, 90, 10, rl.Black,
-	)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Frustum.right: (%v)",
-			d.engine.Camera.Frustum.right,
-		),
-		10, 100, 10, rl.Black,
-	)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Frustum.near: (%v)",
-			d.engine.Camera.Frustum.near,
-		),
-		10, 110, 10, rl.Black,
-	)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Frustum.far: (%v)",
-			d.engine.Camera.Frustum.far,
-		),
-		10, 120, 10, rl.Black,
-	)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Frustum.top: (%v)",
-			d.engine.Camera.Frustum.top,
-		),
-		10, 130, 10, rl.Black,
-	)
-	rl.DrawText(
-		fmt.Sprintf(
-			"Frustum.bottom: (%.v)",
-			d.engine.Camera.Frustum.bottom,
-		),
-		10, 140, 10, rl.Black,
-	)
+	d.ChunkDebug(info.chunksRendered)
 }
 
 func (d Debugger) CameraDebug() {
@@ -97,5 +58,83 @@ func (d Debugger) CameraDebug() {
 		),
 		10, 70, 20, rl.Black,
 	)
+}
 
+func (d Debugger) FrustumDebug() {
+	rl.DrawText(
+		fmt.Sprintf(
+			"Frustum.left normal: (%.2f, %.2f, %.2f), distance: (%.2f)",
+			d.engine.Camera.Frustum.left.normal.X,
+			d.engine.Camera.Frustum.left.normal.Y,
+			d.engine.Camera.Frustum.left.normal.Z,
+			d.engine.Camera.Frustum.left.distance,
+		),
+		10, 90, 10, rl.Black,
+	)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Frustum.left normal: (%.2f, %.2f, %.2f), distance: (%.2f)",
+			d.engine.Camera.Frustum.right.normal.X,
+			d.engine.Camera.Frustum.right.normal.Y,
+			d.engine.Camera.Frustum.right.normal.Z,
+			d.engine.Camera.Frustum.right.distance,
+		),
+		10, 100, 10, rl.Black,
+	)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Frustum.left normal: (%.2f, %.2f, %.2f), distance: (%.2f)",
+			d.engine.Camera.Frustum.near.normal.X,
+			d.engine.Camera.Frustum.near.normal.Y,
+			d.engine.Camera.Frustum.near.normal.Z,
+			d.engine.Camera.Frustum.near.distance,
+		),
+		10, 110, 10, rl.Black,
+	)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Frustum.near: (%.2f, %.2f, %.2f), distance: (%.2f)",
+			d.engine.Camera.Frustum.far.normal.X,
+			d.engine.Camera.Frustum.far.normal.Y,
+			d.engine.Camera.Frustum.far.normal.Z,
+			d.engine.Camera.Frustum.far.distance,
+		),
+		10, 120, 10, rl.Black,
+	)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Frustum.top: (%.2f, %.2f, %.2f), distance: (%.2f)",
+			d.engine.Camera.Frustum.top.normal.X,
+			d.engine.Camera.Frustum.top.normal.Y,
+			d.engine.Camera.Frustum.top.normal.Z,
+			d.engine.Camera.Frustum.top.distance,
+		),
+		10, 130, 10, rl.Black,
+	)
+	rl.DrawText(
+		fmt.Sprintf(
+			"Frustum.bottom: (%.2f, %.2f, %.2f), distance: (%.2f)",
+			d.engine.Camera.Frustum.bottom.normal.X,
+			d.engine.Camera.Frustum.bottom.normal.Y,
+			d.engine.Camera.Frustum.bottom.normal.Z,
+			d.engine.Camera.Frustum.bottom.distance,
+		),
+		10, 140, 10, rl.Black,
+	)
+}
+
+func (d Debugger) ChunkDebug(ids []ChunkID) {
+	idsStr := make([]string, len(ids))
+	for i, id := range ids {
+		idsStr[i] = string(id)
+	}
+	sort.Strings(idsStr)
+
+	rl.DrawText(
+		fmt.Sprintf(
+			"Chunks Rendered: (%v)",
+			idsStr,
+		),
+		10, 160, 20, rl.Black,
+	)
 }
