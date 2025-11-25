@@ -20,11 +20,13 @@ func NewWorld() *World {
 		Chunks: make(map[ChunkID]*Chunk),
 	}
 
-	chunks := []Chunk{
-		NewChunk(rl.NewVector3(0, 0, 0)),
-		NewChunk(rl.NewVector3(16, 0, 0)),
-		NewChunk(rl.NewVector3(0, 0, 16)),
-		NewChunk(rl.NewVector3(16, 0, 16)),
+	var chunks []Chunk
+	chunkGenRadius := 2
+
+	for x := -1 * chunkGenRadius; x <= chunkGenRadius; x++ {
+		for z := -1 * chunkGenRadius; z <= chunkGenRadius; z++ {
+			chunks = append(chunks, NewChunk(16*x, 16*z))
+		}
 	}
 
 	for _, chunk := range chunks {

@@ -37,13 +37,12 @@ type Chunk struct {
 	xRenderOffset, zRenderOffset uint8
 }
 
-func NewChunk(position rl.Vector3) Chunk {
+func NewChunk(xPos, zPos int) Chunk {
 	chunk := Chunk{
-		worldPosition: position,
-		ID: ChunkID(fmt.Sprintf("%d,%d,%d",
-			uint8(position.X),
-			uint8(position.Y),
-			uint8(position.Z),
+		worldPosition: rl.NewVector3(float32(xPos), 0, float32(zPos)),
+		ID: ChunkID(fmt.Sprintf("%d,%d",
+			xPos,
+			zPos,
 		)),
 	}
 

@@ -53,8 +53,8 @@ func (d Debugger) CameraDebug() {
 	)
 	rl.DrawText(
 		fmt.Sprintf(
-			"Chunk Pos: (%#v)",
-			d.engine.World.Chunks["0,0,0"].worldPosition,
+			"Origin Chunk Pos: (%#v)",
+			d.engine.World.Chunks["0,0"].worldPosition,
 		),
 		10, 70, 20, rl.Black,
 	)
@@ -130,10 +130,18 @@ func (d Debugger) ChunkDebug(ids []ChunkID) {
 	}
 	sort.Strings(idsStr)
 
+	// rl.DrawText(
+	// 	fmt.Sprintf(
+	// 		"Chunks Rendered: (%v)",
+	// 		idsStr,
+	// 	),
+	// 	10, 160, 20, rl.Black,
+	// )
+
 	rl.DrawText(
 		fmt.Sprintf(
-			"Chunks Rendered: (%v)",
-			idsStr,
+			"Chunks Rendered Count: (%d)",
+			len(idsStr),
 		),
 		10, 160, 20, rl.Black,
 	)
