@@ -43,12 +43,12 @@ func (p Plane) AABBIntersection(bb rl.BoundingBox) Intersection {
 
 	bbExtent := h.X*f32Abs(p.normal.X) + h.Y*f32Abs(p.normal.Y) + h.Z*f32Abs(p.normal.Z)
 
-	signedDistanceToPlane := rl.Vector3DotProduct(bbCenter, p.normal)
+	signedDistanceToPlane := rl.Vector3DotProduct(bbCenter, p.normal) - p.distance
 
-	if signedDistanceToPlane > bbExtent {
-		return Outside
-	} else if signedDistanceToPlane < bbExtent {
+	if signedDistanceToPlane-bbExtent > 0 {
 		return Inside
+	} else if signedDistanceToPlane+bbExtent < 0 {
+		return Outside
 	} else {
 		return Intersecting
 	}
@@ -60,11 +60,30 @@ func (p Plane) AABBIntersection(bb rl.BoundingBox) Intersection {
  * dotProduct(normal vector, point on plane) = distance
  */
 
-// TODO: implement
-func (f Frustum) Intersection(bb rl.BoundingBox) bool {
-	// check side planes first
+func (f Frustum) Viewable(bb rl.BoundingBox) bool {
+	if i := f.left.AABBIntersection(bb); i == Outside {
+		return false
+	}
 
-	// boundingBoxLeftPlan rl.Vector3{X:1, Y:0, Z:0}
+	if i := f.right.AABBIntersection(bb); i == Outside {
+		return false
+	}
+
+	if i := f.top.AABBIntersection(bb); i == Outside {
+		return false
+	}
+
+	if i := f.bottom.AABBIntersection(bb); i == Outside {
+		return false
+	}
+
+	// Ignoring the far and near planes for now
+	// if i := f.far.AABBIntersection(bb); i == Outside {
+	// 	return false
+	// }
+	// if i := f.near.AABBIntersection(bb); i == Outside {
+	// 	return false
+	// }
 
 	return true
 }

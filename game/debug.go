@@ -73,7 +73,7 @@ func (d Debugger) FrustumDebug() {
 	)
 	rl.DrawText(
 		fmt.Sprintf(
-			"Frustum.left normal: (%.2f, %.2f, %.2f), distance: (%.2f)",
+			"Frustum.right normal: (%.2f, %.2f, %.2f), distance: (%.2f)",
 			d.engine.Camera.Frustum.right.normal.X,
 			d.engine.Camera.Frustum.right.normal.Y,
 			d.engine.Camera.Frustum.right.normal.Z,
@@ -83,7 +83,7 @@ func (d Debugger) FrustumDebug() {
 	)
 	rl.DrawText(
 		fmt.Sprintf(
-			"Frustum.left normal: (%.2f, %.2f, %.2f), distance: (%.2f)",
+			"Frustum.near normal: (%.2f, %.2f, %.2f), distance: (%.2f)",
 			d.engine.Camera.Frustum.near.normal.X,
 			d.engine.Camera.Frustum.near.normal.Y,
 			d.engine.Camera.Frustum.near.normal.Z,
@@ -93,7 +93,7 @@ func (d Debugger) FrustumDebug() {
 	)
 	rl.DrawText(
 		fmt.Sprintf(
-			"Frustum.near: (%.2f, %.2f, %.2f), distance: (%.2f)",
+			"Frustum.far: (%.2f, %.2f, %.2f), distance: (%.2f)",
 			d.engine.Camera.Frustum.far.normal.X,
 			d.engine.Camera.Frustum.far.normal.Y,
 			d.engine.Camera.Frustum.far.normal.Z,
@@ -137,4 +137,17 @@ func (d Debugger) ChunkDebug(ids []ChunkID) {
 		),
 		10, 160, 20, rl.Black,
 	)
+
+	var chunkTxtPos int32 = 160
+	for _, id := range ids {
+		chunkTxtPos += 20
+		rl.DrawText(
+			fmt.Sprintf(
+				"Chunk Pos: (%#v)",
+				d.engine.World.Chunks[id].worldPosition,
+			),
+			10, chunkTxtPos, 20, rl.Black,
+		)
+	}
+
 }

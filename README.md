@@ -1,5 +1,5 @@
 # go-voxel
-A voxel engine written using Go &amp; Vulkan
+A voxel engine written using Go &amp; Raylib
 
 
 ## Work in Progress Compiling to WASM

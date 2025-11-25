@@ -72,11 +72,10 @@ func (e *Engine) render() {
 		// TODO: intersection check for chunk and camara frustum here.
 		// might pass this info to the chunk if only part of the chunk
 		// is interecting so only some voxels are rendered
-		if e.Camera.Frustum.Intersection(chunk.boundingBox) {
+		if e.Camera.Frustum.Viewable(chunk.boundingBox) {
 			chunksRendered = append(chunksRendered, chunk.ID)
+			chunk.render()
 		}
-
-		chunk.render()
 	}
 
 	rl.EndMode3D()
